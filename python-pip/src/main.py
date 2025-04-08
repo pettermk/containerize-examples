@@ -1,20 +1,33 @@
-from typing import Optional
-
-from fastapi import FastAPI, Depends, HTTPException
-from sqlmodel import Field, Session, SQLModel, create_engine, Column, Integer, String, select
 from datetime import datetime
+from typing import Optional
+from contextlib import asynccontextmanager
+import os
+
+os.environ['TESTCONTAINERS_RYUK_DISABLED'] = "true"
+from fastapi import FastAPI, Depends, HTTPException
+from sqlmodel import Field, Session, SQLModel, create_engine, select
 
 
-class Todo(SQLModel, table=True):
-    id: Optional[int] = Field(default=None, primary_key=True)
+class TodoBase(SQLModel):
     title: str = Field(index=True)
     description: str
     completed: bool = Field(default=False)
     created_at: datetime = Field(default_factory=datetime.now)
     updated_at: datetime = Field(default_factory=datetime.now)
 
+class Todo(TodoBase, table=True):
+    id: Optional[int] = Field(default=None, primary_key=True)
 
-DATABASE_URL = "postgresql+psycopg://postgres:12345@localhost:5432/todos"
+class TodoCreate(TodoBase):
+    pass
+
+DATABASE_URL = os.getenv('DATABASE_URL')
+postgres = None
+if DATABASE_URL == None :
+    from testcontainers.postgres import PostgresContainer
+    postgres = PostgresContainer("postgres:16", driver="psycopg", port=5432)
+    postgres.start()
+    DATABASE_URL = postgres.get_connection_url() # "postgresql+psycopg://postgres:12345@localhost:5432/todos")
 
 engine = create_engine(DATABASE_URL, echo=True)
 
@@ -28,17 +41,21 @@ def get_session():
         yield session
 
 
-app = FastAPI()
+@asynccontextmanager 
+async def lifespan(_: FastAPI):
+    if postgres:
+        create_db_and_tables()
+    yield
+    if postgres:
+        postgres.stop()
 
 
-@app.on_event("startup")
-def on_startup():
-    create_db_and_tables()
+app = FastAPI(lifespan=lifespan)
 
 
 @app.post("/todos/", response_model=Todo)
-def create_todo(todo: Todo, session: Session = Depends(get_session)):
-    db_todo = Todo.model_validate(todo)
+def create_todo(todo: TodoCreate, session: Session = Depends(get_session)):
+    db_todo = Todo(**todo.__dict__)
     session.add(db_todo)
     session.commit()
     session.refresh(db_todo)
@@ -54,12 +71,11 @@ def read_todo(todo_id: int, session: Session = Depends(get_session)):
 
 
 @app.patch("/todos/{todo_id}", response_model=Todo)
-def update_todo(todo_id: int, todo: Todo, session: Session = Depends(get_session)):
+def update_todo(todo_id: int, todo: TodoCreate, session: Session = Depends(get_session)):
     db_todo = session.get(Todo, todo_id)
     if not db_todo:
         raise HTTPException(status_code=404, detail="Todo not found")
-    todo_data = todo.model_dump(exclude_unset=True)
-    for key, value in todo_data.items():
+    for key, value in todo.__dict__.items():
         setattr(db_todo, key, value)
     db_todo.updated_at = datetime.now()
     session.add(db_todo)
