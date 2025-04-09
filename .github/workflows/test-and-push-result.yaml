@@ -1,0 +1,24 @@
+name: Matrix Example
+
+on: [push, pull_request]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    strategy:
+      max-parallel: 1
+      matrix:
+        folder: ['python-pip', 'python-poetry']
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Build
+        run: |
+          echo "Building ${matrix.folder} with context ${matrix.context}"
+          cd ${{ matrix.folder }}
+          docker-compose up -d
+          cd ../tests
+          python test_api.py
+          docker-compose down
+
