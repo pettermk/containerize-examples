@@ -15,10 +15,15 @@ jobs:
 
       - name: Build
         run: |
-          echo "Building ${matrix.folder} with context ${matrix.context}"
+          echo "Building ${{ matrix.folder }}"
           cd ${{ matrix.folder }}
-          docker-compose up -d
+          docker compose up -d
           cd ../tests
+          pip install requests
           python test_api.py
-          docker-compose down
+      - name: Cleanup
+        if: always()
+        run: |
+          cd ${{ matrix.folder }}
+          docker compose down
 
