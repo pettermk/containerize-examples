@@ -6,6 +6,7 @@ RUN mkdir /app
 RUN chown 1000:0 /app
 USER 1000
 ENV HOME="/app"
+ENV DATABASE_URL="postgresql+psycopg://postgres:12345@host.docker.internal:5432/todos"
 COPY requirements.txt /app/
 WORKDIR /app
 RUN uv python install

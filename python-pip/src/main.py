@@ -43,8 +43,7 @@ def get_session():
 
 @asynccontextmanager 
 async def lifespan(_: FastAPI):
-    if postgres:
-        create_db_and_tables()
+    create_db_and_tables()
     yield
     if postgres:
         postgres.stop()

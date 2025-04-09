@@ -20,4 +20,4 @@ services:
     ports:
       - 8000:8000
     environment:
-      - DB_CONNECTION_STRING=postgresql+psycopg://postgres:12345@postgres:5432/todos
+      - DATABASE_URL=postgresql+psycopg://postgres:12345@postgres:5432/todos
