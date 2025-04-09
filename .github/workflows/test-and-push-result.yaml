@@ -18,6 +18,7 @@ jobs:
           echo "Building ${{ matrix.folder }}"
           cd ${{ matrix.folder }}
           docker compose up -d
+          sleep 1
           cd ../tests
           pip install requests
           python test_api.py
