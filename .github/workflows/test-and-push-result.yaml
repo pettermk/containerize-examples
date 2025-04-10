@@ -62,9 +62,11 @@ jobs:
       - name: Partial aggregate of results
         run: |
           cd results-aggregator/
-          ls ../*
-          cat snyk.json | jq -e '.vulnerabilities' > snyk.json
+          echo "Modifying snyk.json"
+          cat ../snyk.json | jq -e '.vulnerabilities' > snyk.json
+          echo "Checking docker image"
           docker inspect ${{ matrix.folder }}-api > image.json
+          echo "Running aggregation"
           uv run main.py
 
       - name: Upload DuckDB file
