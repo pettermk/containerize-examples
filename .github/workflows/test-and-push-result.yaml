@@ -62,7 +62,7 @@ jobs:
       - name: Partial aggregate of results
         run: |
           cd results-aggregator/
-          cp ../snyk.json .
+          ls ../*
           cat snyk.json | jq -e '.vulnerabilities' > snyk.json
           docker inspect ${{ matrix.folder }}-api > image.json
           uv run main.py
