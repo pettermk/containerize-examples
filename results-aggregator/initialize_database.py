@@ -11,6 +11,6 @@ if __name__ == '__main__':
         size INT
     ) 
     """
-    conn = duckdb.connect('.duckdb')
+    conn = duckdb.connect('duckdb')
     conn.execute(query)
 

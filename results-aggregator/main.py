@@ -31,7 +31,6 @@ def get_project_info() -> ProjectInfo:
         image = json.load(f)
     results.size = image[0]['Size']
     print(results)
-
     
     # Close the connection after queries
     in_memory.close()
@@ -39,7 +38,7 @@ def get_project_info() -> ProjectInfo:
 
 
 def add_project_to_db(project_info: ProjectInfo):
-    conn = duckdb.connect('.duckdb')
+    conn = duckdb.connect('duckdb')
 
     fields = dataclasses.fields(project_info)
     insert = ', '.join([f'{getattr(project_info, field.name)} as {field.name}' for field in fields])
