@@ -57,7 +57,7 @@ jobs:
       - name: Download all DBs
         uses: actions/download-artifact@v4
         with:
-          path: results-aggregator/duckdb
+          path: results-aggregator/
 
       - name: Partial aggregate of results
         run: |
@@ -72,7 +72,7 @@ jobs:
       - name: Upload DuckDB file
         uses: actions/upload-artifact@v4
         with:
-          path: results-aggregator/duckdb
+          path: results-aggregator/
 
       - name: Cleanup
         if: always()
