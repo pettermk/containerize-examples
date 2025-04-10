@@ -67,6 +67,7 @@ jobs:
           echo "Checking docker image"
           docker inspect ${{ matrix.folder }}-api > image.json
           echo "Running aggregation"
+          ls -al
           uv run main.py
 
       - name: Upload DuckDB file
