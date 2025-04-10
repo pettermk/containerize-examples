@@ -1,2 +1,4 @@
 **/pgdata/
-
+**/.venv/
+**/__pycache__/
+.act-secrets
