@@ -18,6 +18,7 @@ jobs:
       - name: Upload DuckDB file
         uses: actions/upload-artifact@v4
         with:
+          name: snyk-data
           path: results-aggregator/duckdb
 
   build:
@@ -57,6 +58,7 @@ jobs:
       - name: Download all DBs
         uses: actions/download-artifact@v4
         with:
+          name: snyk-data
           path: results-aggregator/
 
       - name: Partial aggregate of results
@@ -73,6 +75,7 @@ jobs:
       - name: Upload DuckDB file
         uses: actions/upload-artifact@v4
         with:
+          name: snyk-data
           path: results-aggregator/
 
       - name: Cleanup
