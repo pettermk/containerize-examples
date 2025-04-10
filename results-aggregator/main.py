@@ -40,9 +40,13 @@ def get_project_info() -> ProjectInfo:
 
 def add_project_to_db(project_info: ProjectInfo):
     conn = duckdb.connect('duckdb')
+    def to_sql(field, project_info) -> str:
+        if type(field) == str:
+            return f"'{getattr(project_info, field)}' as {field}"
+        return f"{getattr(project_info, field)} as {field}"
 
     fields = dataclasses.fields(project_info)
-    insert = ', '.join([f'{getattr(project_info, field.name)} as {field.name}' for field in fields])
+    insert = ', '.join([to_sql(field.name, project_info) for field in fields])
     query = f"""
     INSERT INTO projects BY NAME (SELECT {insert})
     """
