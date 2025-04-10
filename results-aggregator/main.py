@@ -8,7 +8,7 @@ from models import ProjectInfo
 def get_project_info() -> ProjectInfo:
     query_vulnerabilities = """
     CREATE TABLE vulnerabilities
-        AS SELECT * FROM 'ex.json';
+        AS SELECT * FROM 'snyk.json';
     """
     
     # Execute the query to get vulnerability data and perform aggregations
