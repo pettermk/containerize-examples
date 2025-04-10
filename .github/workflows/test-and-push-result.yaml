@@ -76,7 +76,8 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: snyk-data
-          path: results-aggregator/
+          path: results-aggregator/duckdb
+          overwrite: true
 
       - name: Cleanup
         if: always()
