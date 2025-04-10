@@ -30,6 +30,7 @@ def get_project_info() -> ProjectInfo:
     with open('image.json') as f:
         image = json.load(f)
     results.size = image[0]['Size']
+    results.name = image[0]['RepoTags'][0].split(':')[0]
     print(results)
     
     # Close the connection after queries
