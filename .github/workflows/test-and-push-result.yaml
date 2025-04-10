@@ -3,12 +3,31 @@ name: Matrix Example
 on: [push, pull_request]
 
 jobs:
+  initialize_db:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+      - name: Install uv
+        uses: astral-sh/setup-uv@v5
+      - name: Initialize database
+        run: |
+          cd results-aggregator/
+          uv run initialize_database.py
+
+      - name: Upload DuckDB file
+        uses: actions/upload-artifact@v3
+        with:
+          path: results-aggregator/.duckdb
+
   build:
     runs-on: ubuntu-latest
+    needs: initialize_db
     strategy:
       max-parallel: 1
       matrix:
-        folder: ['python-pip', 'python-poetry']
+        # folder: ['python-pip', 'python-poetry']
+        folder: ['python-pip']
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
@@ -18,10 +37,40 @@ jobs:
           echo "Building ${{ matrix.folder }}"
           cd ${{ matrix.folder }}
           docker compose up -d
-          sleep 1
+          sleep 2
           cd ../tests
           pip install requests
           python test_api.py
+      - name: Snyk test 
+        uses: snyk/actions/docker@master
+        continue-on-error: true
+        env:
+          SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
+          SNYK_API: https://api.eu.snyk.io
+        with:
+          image: ${{ matrix.folder }}-api
+          command: test
+          json: true
+      - name: Install uv
+        uses: astral-sh/setup-uv@v5
+      - name: Download all DBs
+        uses: actions/download-artifact@v3
+        with:
+          path: results-aggregator/.duckdb
+
+      - name: Partial aggregate of results
+        run: |
+          cd results-aggregator/
+          cp ../snyk.json .
+          cat snyk.json | jq -e '.vulnerabilities' > snyk.json
+          docker inspect ${{ matrix.folder }}-api > image.json
+          uv run main.py
+
+      - name: Upload DuckDB file
+        uses: actions/upload-artifact@v3
+        with:
+          path: results-aggregator/.duckdb
+
       - name: Cleanup
         if: always()
         run: |
