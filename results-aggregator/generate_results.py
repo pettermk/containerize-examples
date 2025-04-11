@@ -9,6 +9,7 @@ from models import ProjectInfo
 def get_results() -> List[ProjectInfo]:
     conn = duckdb.connect('duckdb')
 
+
     query = f"""
     SELECT * FROM projects;
     """
@@ -22,15 +23,11 @@ def get_results() -> List[ProjectInfo]:
 if __name__ == "__main__":
     projects = get_results()
 
-    template = Template("""
-| Project     | Low | Medium | High | Critical | Size (MB) |
-|-------------|-----|--------|------|----------|-----------|
-{% for p in projects -%}
-| {{ p.name or "N/A" }} | {{ p.low }} | {{ p.medium }} | {{ p.high }} | {{ p.critical }} | {{ '%.2f' % p.size_mb() }} |
-{% endfor %}
-    """)
-    
+    template = None
+    with open('../README.md.jinja2') as f:
+        template = Template(f.read())
     output = template.render(projects=projects)
-    print(output)
+    with open('../README.md', "w") as fh:
+        fh.write(output)
 
 
