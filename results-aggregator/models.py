@@ -4,6 +4,7 @@ from dataclasses import dataclass
 class ProjectInfo:
     """Class for maintaining project info like vulnerablilities and image size"""
     name: str | None = None
+    base_image: str | None = None
     low: int = 0
     medium: int = 0
     high: int = 0

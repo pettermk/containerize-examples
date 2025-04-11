@@ -4,6 +4,7 @@ if __name__ == '__main__':
     query = """
     CREATE TABLE IF NOT EXISTS projects (
         name VARCHAR,
+        base_image VARCHAR,
         low INTEGER,
         medium INTEGER,
         high INTEGER,

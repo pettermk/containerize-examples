@@ -22,20 +22,29 @@ def get_project_info() -> ProjectInfo:
     """
     aggregated_result = in_memory.execute(aggregation_query).fetchall()
     
-    results: ProjectInfo = ProjectInfo()
+    project_info: ProjectInfo = ProjectInfo()
     for row in aggregated_result:
-        setattr(results, row[0], row[1])
+        setattr(project_info, row[0], row[1])
 
     # Get docker image size
     with open('image.json') as f:
         image = json.load(f)
-    results.size = image[0]['Size']
-    results.name = image[0]['RepoTags'][0].split(':')[0]
-    print(results)
+    project_info.size = image[0]['Size']
+    project_info.name = image[0]['RepoTags'][0].split(':')[0]
+    history = []
+    with open('history.json') as f:
+        history = [json.loads(line) for line in f.readlines()]
+    try:
+        # Get the line containing FROM in the docker build history, and parse out the base image
+        base_image_event = next(h for h in history if "FROM" in h["Comment"])
+        base_image = base_image_event["Comment"].split("/")[-1].split(":")[0]
+        project_info.base_image = base_image
+    except Exception as e:
+        print(f'Error, {str(e)}')
     
     # Close the connection after queries
     in_memory.close()
-    return results
+    return project_info
 
 
 def add_project_to_db(project_info: ProjectInfo):
@@ -57,5 +66,4 @@ def add_project_to_db(project_info: ProjectInfo):
 if __name__ == "__main__":
     project_info: ProjectInfo = get_project_info()
     add_project_to_db(project_info)
-
 
