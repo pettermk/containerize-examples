@@ -14,7 +14,6 @@ psycopg = "^3.2.6"
 psycopg-binary = "^3.2.6"
 sqlmodel = "^0.0.24"
 testcontainers = "^4.10.0"
-alembic = "^1.15.2"
 
 
 [build-system]
