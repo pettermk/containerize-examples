@@ -6,5 +6,5 @@ of there resulting image and its security posture in terms of vulnerabilities.
 
 | Project     | Base image | Low | Medium | High | Critical | Size (MB) |
 |-------------|------------|-----|--------|------|----------|-----------|
-| python-pip-api | ubi9-micro-9-5 | 9 | 3 | 0 | 0 | 186.90 |
-| python-poetry-api | ubi9-micro-9-5 | 9 | 3 | 0 | 0 | 300.83 |
+| python-pip-api | ubi9-micro-9-5 | 9 | 3 | 0 | 0 | 187.87 |
+| python-poetry-api | ubi9-micro-9-5 | 9 | 3 | 0 | 0 | 299.62 |
