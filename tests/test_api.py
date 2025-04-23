@@ -1,4 +1,5 @@
 import requests
+from pathlib import Path
 
 def test_create_todo():
     response = requests.post("http://localhost:8000/todos/", json={
@@ -48,11 +49,18 @@ def test_read_todos():
 if __name__ == "__main__":
     try:
         # Run tests in sequence
+        print("Creating TODOs")
         todo_id = test_create_todo()
+        print("Reading TODOs")
         test_read_todo(todo_id)
+        print("Updating TODOs")
         test_update_todo(todo_id)
+        print("Deleting TODOs")
         test_delete_todo(todo_id)
+        print("Reading TODOs")
         test_read_todos()
         print("All tests passed successfully!")
-    except AssertionError as e:
-        print("A test failed:", e)
+        Path('PASSED').touch()
+    except Exception as e:
+        Path('FAILED').touch()
+        print("A test failed:", str(e))
