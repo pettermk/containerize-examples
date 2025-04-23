@@ -17,7 +17,7 @@ def get_project_info(folder: str) -> ProjectInfo:
     in_memory.execute(query_vulnerabilities)
     
     aggregation_query = """
-    SELECT severity, COUNT(*) AS issue_count
+    SELECT severity, COUNT(DISTINCT id) AS issue_count
     FROM memory.vulnerabilities
     GROUP BY severity;
     """
