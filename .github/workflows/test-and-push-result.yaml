@@ -74,7 +74,7 @@ jobs:
           docker history ${{ matrix.folder }}-api --format json > history.json
           echo "Running aggregation"
           ls -al
-          uv run main.py
+          uv run main.py ${{ matrix.folder }}
 
       - name: Upload DuckDB file
         uses: actions/upload-artifact@v4
