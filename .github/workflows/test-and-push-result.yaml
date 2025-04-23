@@ -31,7 +31,7 @@ jobs:
     strategy:
       max-parallel: 1
       matrix:
-        folder: ['python-pip', 'python-poetry']
+        folder: ['python-pip', 'python-poetry', 'dotnetcore']
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
