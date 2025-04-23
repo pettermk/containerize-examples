@@ -40,7 +40,7 @@ def get_project_info(folder: str) -> ProjectInfo:
         base_image_event = next(h for h in reversed(history) if "FROM" in h)
         print(base_image_event)
         base_image = base_image_event.split(" ")[1]
-        project_info.base_image = base_image
+        project_info.base_image = base_image.strip()
     except Exception as e:
         print(f'Error, {str(e)}')
     
