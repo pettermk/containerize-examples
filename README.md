@@ -6,6 +6,8 @@ of there resulting image and its security posture in terms of vulnerabilities.
 
 | Project     | Base image | Low | Medium | High | Critical | Size (MB) |
 |-------------|------------|-----|--------|------|----------|-----------|
-| python-pip-api | ubi9-micro-9-5 | 9 | 3 | 0 | 0 | 187.86 |
-| python-poetry-api | ubi9-micro-9-5 | 9 | 3 | 0 | 0 | 299.62 |
-| dotnetcore-api | None | 154 | 0 | 0 | 5 | 236.80 |
+| python-pip-api | registry.access.redhat.com/ubi9/ubi-micro
+ | 9 | 3 | 0 | 0 | 187.86 |
+| python-poetry-api | registry.access.redhat.com/ubi9/ubi-micro
+ | 9 | 3 | 0 | 0 | 299.62 |
+| dotnetcore-api | mcr.microsoft.com/dotnet/aspnet:8.0 | 36 | 0 | 0 | 1 | 236.80 |
