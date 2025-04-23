@@ -38,14 +38,14 @@ if (string.IsNullOrEmpty(connectionString))
     var port = postgresContainer.GetMappedPublicPort(5432);
     var host = postgresContainer.Hostname;
 
-    connectionString = $"Host={host};Port={port};Username=postgres;Password=password;Database=todo_db";
-
     Console.WriteLine($"PostgreSQL test container started at: {connectionString}");
+    connectionString = $"Host={host};Port={port};Username=postgres;Password=password;Database=todo_db";
 }
 
 // Configure PostgreSQL
 /*var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");*/
 
+Console.WriteLine($"Attempting to connect to postgres at: {connectionString}");
 builder.Services.AddDbContext<TodoDbContext>(options =>
     options.UseNpgsql(connectionString));
 var app = builder.Build();
