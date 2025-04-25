@@ -1,24 +1,3 @@
-FROM python:debian-slim
-
-COPY --from=ghcr.io/astral-sh/uv:latest /uv /uvx /bin/
-
-RUN mkdir /app
-RUN chown 1000:0 /app
-USER 1000
-ENV HOME="/app"
-ENV DATABASE_URL="postgresql+psycopg://postgres:12345@host.docker.internal:5432/todos"
-COPY requirements.txt /app/
-WORKDIR /app
-RUN uv python install
-RUN uv venv
-RUN uv pip install -r requirements.txt
-
-COPY --chown=1000:0 src/ /app/src
-WORKDIR /app/src
-
-CMD ["uv", "run", "python3", "-m", "uvicorn", "main:app", "--host", "0.0.0.0"]
-
-
 # syntax=docker/dockerfile:1
 
 # Comments are provided throughout this file to help you get started.
