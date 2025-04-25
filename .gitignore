@@ -1,5 +1,6 @@
 **/pgdata/
 **/.venv/
+**/venv/
 **/__pycache__/
 .act-secrets
 .artifacts/
