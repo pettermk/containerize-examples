@@ -1,0 +1,23 @@
+version: '3.9'
+
+services:
+  postgres:
+    image: postgres:17-alpine
+    ports:
+      - 5432:5432
+    volumes:
+      - ./pgdata:/var/lib/postgresql/data
+    environment:
+      - POSTGRES_PASSWORD=12345
+      - POSTGRES_USER=postgres
+      - POSTGRES_DB=todos
+  
+  api:
+    build:
+      context: .
+    depends_on: 
+    - postgres
+    ports:
+      - 8000:8000
+    environment:
+      - DATABASE_URL=postgresql+psycopg://postgres:12345@postgres:5432/todos
