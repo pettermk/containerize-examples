@@ -33,6 +33,8 @@ jobs:
       matrix:
         folder:
           - 'python-pip'
+          - 'python-pip-debian-slim'
+          - 'python-pip-debian'
           - 'python-poetry'
           - 'dotnetcore'
           - 'dotnetcore-chiseled'
