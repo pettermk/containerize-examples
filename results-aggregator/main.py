@@ -31,7 +31,7 @@ def get_project_info(folder: str) -> ProjectInfo:
     with open('image.json') as f:
         image = json.load(f)
     project_info.size = image[0]['Size']
-    project_info.name = image[0]['RepoTags'][0].split(':')[0]
+    project_info.name = folder
     history = []
     with open(f'../{folder}/Dockerfile') as f:
         history = f.readlines()
